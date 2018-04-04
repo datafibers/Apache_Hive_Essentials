@@ -4,3 +4,5 @@ This is source code for [Apache Hive Essentials 2nd Edition](https://www.packtpu
 * The code for the 1st edition is [here](https://github.com/willddy/HiveEssentials)
 * The code is tested in hive 1.2.1 in HDP 2.6.4
 * The new features are tested against Hive 2.3.2
+
+An optimized sandbox is also provided **[here](https://github.com/datafibers/lab_env)** to run the code in script folder.

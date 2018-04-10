@@ -87,7 +87,7 @@ ALTER TABLE employee_internal SET SERDEPROPERTIES ('field.delim' = '$');
 ALTER TABLE c_employee SET FILEFORMAT RCFILE;
 
 --Alter Table Location
-ALTER TABLE c_employee SET LOCATION 'hdfs://localhost:8020/user/dayongd/employee'; 
+ALTER TABLE c_employee SET LOCATION 'hdfs://localhost:9000/user/dayongd/employee'; 
 
 --Alter Table Location
 ALTER TABLE c_employee ENABLE NO_DROP; 

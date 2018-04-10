@@ -11,7 +11,7 @@ CREATE DATABASE IF NOT EXISTS myhivebook;
 CREATE DATABASE IF NOT EXISTS myhivebook
 COMMENT 'hive database demo'
 LOCATION '/hdfs/directory'
-WITH DBPROPERTIES ('creator'='dayongd','date'='2015-01-01');
+WITH DBPROPERTIES ('creator'='dayongd','date'='2018-01-01');
 
 --Show and describe database with wildcards
 SHOW DATABASES;

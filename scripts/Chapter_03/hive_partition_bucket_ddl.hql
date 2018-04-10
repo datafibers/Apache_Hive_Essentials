@@ -21,19 +21,19 @@ SHOW PARTITIONS employee_partitioned;
 
 --Add multiple partitions
 ALTER TABLE employee_partitioned ADD 
-PARTITION (year=2014, month=11)        
-PARTITION (year=2014, month=12);
+PARTITION (year=2018, month=11)        
+PARTITION (year=2018, month=12);
 
 SHOW PARTITIONS employee_partitioned;
 
-ALTER TABLE employee_partitioned DROP PARTITION (year=2014, month=11);
+ALTER TABLE employee_partitioned DROP PARTITION (year=2018, month=11);
 
 SHOW PARTITIONS employee_partitioned;
 
 --Load data to the partition
 LOAD DATA LOCAL INPATH '/home/dayongd/Downloads/employee.txt' 
 OVERWRITE INTO TABLE employee_partitioned
-PARTITION (year=2014, month=12);
+PARTITION (year=2018, month=12);
 
 --Verify data loaded
 SELECT name, year, month FROM employee_partitioned;

@@ -10,7 +10,7 @@ This is source code for [Apache Hive Essentials 2nd Edition](https://www.packtpu
 1. ```git clone https://github.com/datafibers/Apache_Hive_Essentials.git```
 1. ```cd Apache_Hive_Essentials```
 1. Make a directory in HDFS, ```hdfs dfs -mkdir -p /tmp/hivedemo```
-1. Upload the data to the HDFS folder, ```hdfs dfs -put * /tmp/hivedemo/```
+1. Upload the data to the HDFS folder, ```hdfs dfs -put data /tmp/hivedemo/```
 
 ## Folder Structure
 * ./data: All sample data used for the demo code

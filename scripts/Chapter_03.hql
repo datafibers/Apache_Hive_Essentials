@@ -270,6 +270,9 @@ FIELDS TERMINATED BY '|'
 COLLECTION ITEMS TERMINATED BY ','
 MAP KEYS TERMINATED BY ':';
 
+--Check partition table structure
+DESC employee_partitioned;
+
 --Show partitions
 SHOW PARTITIONS employee_partitioned;
 
@@ -280,9 +283,17 @@ PARTITION (year=2018, month=12);
 
 SHOW PARTITIONS employee_partitioned;
 
+--Drop partitions
 ALTER TABLE employee_partitioned DROP PARTITION (year=2018, month=11);
 
 SHOW PARTITIONS employee_partitioned;
+
+--Rename partitions
+ALTER TABLE employee_partitioned PARTITION (year=2018, month=12) RENAME TO PARTITION (year=2018,month=10);
+
+SHOW PARTITIONS employee_partitioned;
+
+--ALTER TABLE employee_partitioned PARTITION (year=2018) RENAME TO PARTITION (year=2017); --Failed, must specify all partitions
 
 --Load data to the partition
 LOAD DATA INPATH '/tmp/hivedemo/data/employee.txt' 
@@ -294,6 +305,11 @@ SELECT name, year, month FROM employee_partitioned;
 
 --Partition table add columns
 ALTER TABLE employee_partitioned ADD COLUMNS (work string) CASCADE;
+
+--Change data type for partition columns
+ALTER TABLE employee_partitioned PARTITION COLUMN(year string);
+--Verify the changes
+DESC employee_partitioned;
 
 ALTER TABLE employee_partitioned PARTITION (year=2018) SET FILEFORMAT ORC;
 ALTER TABLE employee_partitioned PARTITION (year=2018) SET LOCATION '/tmp/data';

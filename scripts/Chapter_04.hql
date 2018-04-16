@@ -6,17 +6,27 @@ SELECT * FROM employee;
 --Select only one column
 SELECT name FROM employee;
 
+--List columns meet java regular expression
+SET hive.support.quoted.identifiers = none;
+SELECT `^work.*` FROM employee;
+
 --Select unique rows
-SELECT DISTINCT name FROM employee LIMIT 2;
+SELECT DISTINCT name, work_place FROM employee;
 
---Enable fetch
-SET hive.fetch.task.conversion=more;
+--Select with UDF, IF, and CASE WHEN
+SELECT 
+CASE WHEN sex_age.sex = 'Female' THEN 'Ms.'
+ELSE 'Mr.' END as title,
+name, 
+IF(array_contains(work_place, 'New York'), 'US', 'CA') as country
+FROM employee;
 
---Verify the improvement, which is less than one second
-SELECT name FROM employee;
-
---Use LIMIT and WHERE keywords
-SELECT name, work_place FROM employee WHERE name = 'Michael';
+--Nest SELECT after the FROM
+SELECT name, sex_age.sex AS sex
+FROM(
+SELECT * FROM employee
+WHERE sex_age.sex = 'Male'
+) t1;
 
 --Nest SELECT using CTE
 WITH t1 AS (
@@ -24,28 +34,34 @@ SELECT * FROM employee
 WHERE sex_age.sex = 'Male')
 SELECT name, sex_age.sex AS sex FROM t1;
 
---Nest SELECT after the FROM
-SELECT name, sex_age.sex AS sex
-FROM
-(
-  SELECT * FROM employee
-  WHERE sex_age.sex = 'Male'
-) t1;
+--Select with expression
+SELECT concat('1','+','3','=',cast((1 + 3) as string)) as res;
 
---Subquery
+--Filter data with limit
+SELECT name FROM employee LIMIT 2;
+
+--Filter with Where
+SELECT name, work_place FROM employee WHERE name = 'Michael';
+
+--Filter with in
+SELECT name FROM employee WHERE sex_age.age in (27, 30);
+
+--In for multiple columns Works after v2.1.0
+SELECT 
+name, sex_age 
+FROM employee 
+WHERE (sex_age.sex , sex_age.age) IN (('Female', 27), ('Male', 27 + 3));
+
+--Subquery in
 SELECT name, sex_age.sex AS sex
 FROM employee a
-WHERE a.name IN
-(SELECT name FROM employee
-WHERE sex_age.sex = 'Male'
-);
+WHERE a.name IN (SELECT name FROM employee WHERE sex_age.sex = 'Male');
 
+--Subquery exists
 SELECT name, sex_age.sex AS sex
 FROM employee a
 WHERE EXISTS
-(SELECT * FROM employee b
-WHERE a.sex_age.sex = b.sex_age.sex AND b.sex_age.sex = 'Male'
-);
+(SELECT * FROM employee b WHERE a.sex_age.sex = b.sex_age.sex AND b.sex_age.sex = 'Male');
  
 --Prepare another table for join and load data
 CREATE TABLE IF NOT EXISTS employee_hr
@@ -59,12 +75,33 @@ ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '|'
 STORED AS TEXTFILE;
 
-LOAD DATA LOCAL INPATH '/home/Dayongd/employee_hr.txt' OVERWRITE INTO TABLE employee_hr;
+LOAD DATA INPATH '/tmp/hivedemo/data/employee_hr.txt' OVERWRITE INTO TABLE employee_hr;
 
---JOIN between two tables
+--Equal JOIN between two tables
 SELECT emp.name, emph.sin_number
 FROM employee emp
 JOIN employee_hr emph ON emp.name = emph.name;
+
+--Unequal join returns more rows
+SELECT 
+emp.name, emph.sin_number
+FROM employee emp 
+JOIN employee_hr emph ON emp.name != emph.name;
+
+--Join with complex expression - conditional join
+SELECT 
+emp.name, emph.sin_number
+FROM employee emp
+JOIN employee_hr emph ON 
+IF(emp.name = 'Will', '1', emp.name) = CASE WHEN emph.name = 'Will' THEN '0' ELSE emph.name END;
+
+-- Use Where to limit the output of join
+SELECT 
+emp.name, emph.sin_number
+FROM employee emp
+JOIN employee_hr emph ON emp.name = emph.name
+WHERE
+emp.name = 'Will';
 
 --JOIN between more tables
 SELECT emp.name, empi.employee_id, emph.sin_number
@@ -151,30 +188,25 @@ FROM employee a
 LEFT SEMI JOIN employee_id b
 ON a.name = b.name;
 
---UNION ALL
---Names in employee_hr table
-SELECT name FROM employee_hr;
-
---Names in employee table
-SELECT name FROM employee;   
-
 --UNION ALL including duplications
-SELECT a.name 
+SELECT a.name as nm
 FROM employee a
 UNION ALL
-SELECT b.name 
+SELECT b.name as nm
 FROM employee_hr b;
 
---Implement UNION between two tables without duplications
-SELECT DISTINCT name
-FROM
-(
-   SELECT a.name AS name
-   FROM employee a
-   UNION ALL
-   SELECT b.name AS name
-   FROM employee_hr b
-) union_set;
+--UNION
+SELECT a.name as nm
+FROM employee a
+UNION
+SELECT b.name as nm
+FROM employee_hr b;
+
+--Order with UNION
+SELECT a.name as nm FROM employee a
+UNION ALL
+SELECT b.name as nm FROM employee_hr b
+ORDER BY nm;
 
 --Table employee implements INTERCEPT employee_hr
 SELECT a.name 

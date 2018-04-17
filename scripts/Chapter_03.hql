@@ -2,8 +2,7 @@
 --Chapter 03 - Hive Data Types 
 
 --Create table using ARRAY, MAP, STRUCT, and Composite data type
-CREATE TABLE employee
-(
+CREATE TABLE employee (
   name string,
   work_place ARRAY<string>,
   sex_age STRUCT<sex:string,age:int>,
@@ -13,7 +12,8 @@ CREATE TABLE employee
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '|'
 COLLECTION ITEMS TERMINATED BY ','
-MAP KEYS TERMINATED BY ':';
+MAP KEYS TERMINATED BY ':'
+STORED AS TEXTFILE;
 
 --Verify tables creations run in Beeline
 !table employee
@@ -91,8 +91,7 @@ ALTER DATABASE myhivebook SET OWNER user dayongd;
 --Chapter 3 Code - Hive Table DDL
 
 --Create internal table and load the data
-CREATE TABLE IF NOT EXISTS employee_internal 
-(
+CREATE TABLE IF NOT EXISTS employee_internal (
   name string,
   work_place ARRAY<string>,
   sex_age STRUCT<sex:string,age:int>,
@@ -109,14 +108,13 @@ STORED AS TEXTFILE;
 LOAD DATA INPATH '/tmp/hivedemo/data/employee.txt' OVERWRITE INTO TABLE employee_internal;
 
 --Create external table and load the data
-CREATE EXTERNAL TABLE IF NOT EXISTS employee_external
- (
+CREATE EXTERNAL TABLE IF NOT EXISTS employee_external (
    name string,
    work_place ARRAY<string>,
    sex_age STRUCT<sex:string,age:int>,
    skills_score MAP<string,int>,
    depart_title MAP<STRING,ARRAY<STRING>>
- )
+)
 COMMENT 'This is an external table'
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '|'

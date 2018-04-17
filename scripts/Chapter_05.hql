@@ -38,6 +38,10 @@ work_place string
 INSERT INTO TABLE emp_simple(name) -- Specify which columns to insert
 SELECT name FROM employee WHERE name = 'Will';
 
+--Insert values
+INSERT INTO TABLE emp_simple VALUES ('Michael', 'Toronto'),('Lucy', 'Montreal');
+SELECT * FROM emp_simple;
+
 --INSERT from CTE
 WITH a as (SELECT * FROM ctas_employee )
 FROM a

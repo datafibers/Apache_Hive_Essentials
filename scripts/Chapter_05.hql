@@ -11,12 +11,12 @@ OVERWRITE INTO TABLE employee_partitioned
 PARTITION (year=2014, month=12);
 
 --Load HDFS data to table using default system path
-LOAD DATA INPATH '/user/dayongd/employee/employee.txt' 
+LOAD DATA INPATH '/tmp/hivedemo/data/employee.txt' 
 OVERWRITE INTO TABLE employee;
 
 --Load HDFS data to table with full URI
 LOAD DATA INPATH 
-'hdfs://[dfs_hostname]:8020/user/dayongd/employee/employee.txt' 
+'hdfs://[dfs_hostname]:9000/tmp/hivedemo/data/employee.txt' 
 OVERWRITE INTO TABLE employee;
 
 --Data Exchange - INSERT
@@ -29,6 +29,14 @@ SELECT * FROM ctas_employee;
 
 --Verify the data loaded
 SELECT name, work_place, sex_age FROM employee;    
+
+--Insert specified columns
+CREATE TABLE emp_simple( -- Create a test table only has primary types
+name string,
+work_place string
+);
+INSERT INTO TABLE emp_simple(name) -- Specify which columns to insert
+SELECT name FROM employee WHERE name = 'Will';
 
 --INSERT from CTE
 WITH a as (SELECT * FROM ctas_employee )

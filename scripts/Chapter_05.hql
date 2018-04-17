@@ -49,7 +49,10 @@ FROM ctas_employee
 INSERT OVERWRITE TABLE employee
 SELECT *
 INSERT OVERWRITE TABLE employee_internal
-SELECT * ;
+SELECT * 
+INSERT OVERWRITE TABLE employee_partitioned partition(year=2018, month=9)
+SELECT * 
+;
 
 --Dynamic partition is not enabled by default. We need to set following to make it work.
 SET hive.exec.dynamic.partition=true;

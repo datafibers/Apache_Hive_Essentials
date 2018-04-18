@@ -116,44 +116,46 @@ IMPORT TABLE employee_partitioned_imported
 FROM '/tmp/output7';                     
 
 --ORDER, SORT
-SELECT name FROM employee ORDER BY NAME DESC;
+SELECT name FROM employee ORDER BY name DESC;
+SELECT * FROM emp_simple ORDER BY work_place NULL LAST;
 
 --Use more than 1 reducer
 SET mapred.reduce.tasks = 2;
 
-SELECT name FROM employee SORT BY NAME DESC;   
+SELECT name FROM employee SORT BY name DESC;   
 
 --Use only 1 reducer
 SET mapred.reduce.tasks = 1; 
 
-SELECT name FROM employee SORT BY NAME DESC;   
+SELECT name FROM employee SORT BY name DESC;   
 
+--Distribute by
 SELECT name, employee_id 
 FROM employee_hr DISTRIBUTE BY employee_id ; 
 
 --Used with SORT BY
-SELECT name, employee_id  
-FROM employee_hr DISTRIBUTE BY employee_id SORT BY name; 
+SELECT name, start_date FROM employee_hr DISTRIBUTE BY start_date SORT BY name;
 
+--Cluster by
 SELECT name, employee_id FROM employee_hr CLUSTER BY name ;   
 
 --Complex datatype function
-SELECT work_place, skills_score, depart_title FROM employee;
-
-SELECT SIZE(work_place) AS array_size, 
-SIZE(skills_score) AS map_size, 
-SIZE(depart_title) AS complex_size, 
-SIZE(depart_title["Product"]) AS nest_size 
+SELECT 
+size(work_place) AS array_size, 
+size(skills_score) AS map_size, 
+size(depart_title) AS complex_size, 
+size(depart_title["Product"]) AS nest_size 
 FROM employee;
 
+SELECT size(null), size(array(null)), size(array());
+
 --Arrary functions
-SELECT ARRAY_CONTAINS(work_place, 'Toronto') AS is_Toronto,
-SORT_ARRAY(work_place) AS sorted_array FROM employee;
+SELECT array_contains(work_place, 'Toronto') AS is_Toronto, sort_array(work_place) AS sorted_array FROM employee;
 
 --Date and time functions
-SELECT FROM_UNIXTIME(UNIX_TIMESTAMP()) AS current_time FROM employee LIMIT 1;
+SELECT from_unixtime(unix_timestamp()) AS current_time FROM employee LIMIT 1;
 
-SELECT TO_DATE(FROM_UNIXTIME(UNIX_TIMESTAMP())) AS current_date FROM employee LIMIT 1;
+SELECT to_date(from_unixtime(unix_timestamp())) AS current_date FROM employee LIMIT 1;
 
 --To compare the difference of two date.
 SELECT (unix_timestamp('2015-01-21 18:00:00') - unix_timestamp('2015-01-10 11:00:00'))/60/60/24 AS daydiff

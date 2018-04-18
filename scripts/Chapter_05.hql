@@ -87,31 +87,33 @@ SELECT * FROM employee;
 
 --Multiple INSERT
 FROM employee
-INSERT OVERWRITE DIRECTORY '/user/dayongd/output'
+INSERT OVERWRITE DIRECTORY '/tmp/output3'
 SELECT *
-INSERT OVERWRITE DIRECTORY '/user/dayongd/output1'
+INSERT OVERWRITE DIRECTORY '/tmp/output4'
 SELECT * ;
 
 --Export data and metadata of table
-EXPORT TABLE employee TO '/user/dayongd/output3';
+EXPORT TABLE employee TO '/tmp/output5';
+
+--dfs -ls -R /tmp/output5/
 
 --Import table with the same name
-IMPORT FROM '/user/dayongd/output3';              
+IMPORT FROM '/tmp/output5';              
 
 --Import as new table
-IMPORT TABLE empolyee_imported FROM '/user/dayongd/output3';
+IMPORT TABLE empolyee_imported FROM '/tmp/output5';
 
 --Import as external table 
 IMPORT EXTERNAL TABLE empolyee_imported_external 
-FROM '/user/dayongd/output3'
-LOCATION '/user/dayongd/output4' ; --Note, LOCATION property is optional.
+FROM '/tmp/output5'
+LOCATION '/tmp/output6' ; --Note, LOCATION property is optional.
 
 --Export and import to partitions
 EXPORT TABLE employee_partitioned partition 
-(year=2014, month=11) TO '/user/dayongd/output5';
+(year=2018, month=11) TO '/tmp/output7';
 
 IMPORT TABLE employee_partitioned_imported 
-FROM '/user/dayongd/output5';                     
+FROM '/tmp/output7';                     
 
 --ORDER, SORT
 SELECT name FROM employee ORDER BY NAME DESC;

@@ -8,7 +8,7 @@ LOAD DATA LOCAL INPATH '/home/dayongd/Downloads/employee_hr.txt' OVERWRITE INTO 
 --Load local data to partition table
 LOAD DATA LOCAL INPATH '/home/dayongd/Downloads/employee.txt'
 OVERWRITE INTO TABLE employee_partitioned
-PARTITION (year=2014, month=12);
+PARTITION (year=2018, month=12);
 
 --Load HDFS data to table using default system path
 LOAD DATA INPATH '/tmp/hivedemo/data/employee.txt' 
@@ -110,7 +110,7 @@ LOCATION '/tmp/output6' ; --Note, LOCATION property is optional.
 
 --Export and import to partitions
 EXPORT TABLE employee_partitioned partition 
-(year=2018, month=11) TO '/tmp/output7';
+(year=2018, month=12) TO '/tmp/output7';
 
 IMPORT TABLE employee_partitioned_imported 
 FROM '/tmp/output7';                     

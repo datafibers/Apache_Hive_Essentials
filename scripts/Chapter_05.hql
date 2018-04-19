@@ -153,41 +153,11 @@ SELECT size(null), size(array(null)), size(array());
 SELECT array_contains(work_place, 'Toronto') AS is_Toronto, sort_array(work_place) AS sorted_array FROM employee;
 
 --Date and time functions
-SELECT from_unixtime(unix_timestamp()) AS current_time FROM employee LIMIT 1;
-
 SELECT to_date(from_unixtime(unix_timestamp())) AS current_date FROM employee LIMIT 1;
 
 --To compare the difference of two date.
-SELECT (unix_timestamp('2015-01-21 18:00:00') - unix_timestamp('2015-01-10 11:00:00'))/60/60/24 AS daydiff
+SELECT (unix_timestamp('2018-01-21 18:00:00') - unix_timestamp('2018-01-10 11:00:00'))/60/60/24 AS daydiff
 FROM employee LIMIT 1;
-
---CASE for different data type
-SELECT CASE WHEN 1 IS NULL THEN 'TRUE' ELSE 0 END AS case_result
-FROM employee LIMIT 1;
-
---Parser and search tips
---Prepare data
-INSERT INTO TABLE employee
-SELECT 'Steven' AS name, array(null) as work_place,
-named_struct("sex","Male","age",30) as sex_age, 
-map("Python",90) as skills_score, 
-map("R&D",array('Developer')) as depart_title
-FROM employee LIMIT 1;
-
---Check what's inserted
-SELECT name, work_place, skills_score FROM employee;
-
---LATERAL VIEW ignore the whole rows when EXPLORE returns NULL
-SELECT name, workplace, skills, score
-FROM employee
-LATERAL VIEW explode(work_place) wp AS workplace
-LATERAL VIEW explode(skills_score) ss AS skills, score;
-
---OUTER LATERAL VIEW keep rows when EXPLORE returns NULL
-SELECT name, workplace, skills, score
-FROM employee
-LATERAL VIEW OUTER explode(work_place) wp AS workplace
-LATERAL VIEW explode(skills_score) ss AS skills, score;
 
 --Get the file name form a Linux path
 SELECT

@@ -167,6 +167,9 @@ collect_set(sex_age.sex) AS sex_set,
 collect_list(sex_age.sex) AS sex_list
 FROM employee;
 
+--virtual columns
+SELECT INPUT__FILE__NAME,BLOCK__OFFSET__INSIDE__FILE AS OFFSIDE FROM employee;
+
 --Transactions
 --Below configuration parameters must be set appropriately to turn on transaction support in Hive.
 SET hive.support.concurrency = true;

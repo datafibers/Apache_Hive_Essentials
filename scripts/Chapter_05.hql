@@ -153,30 +153,13 @@ SELECT size(null), size(array(null)), size(array());
 SELECT array_contains(work_place, 'Toronto') AS is_Toronto, sort_array(work_place) AS sorted_array FROM employee;
 
 --Date and time functions
-SELECT to_date(from_unixtime(unix_timestamp())) AS current_date FROM employee LIMIT 1;
+SELECT to_date(from_unixtime(unix_timestamp())) AS currentdate;
 
 --To compare the difference of two date.
-SELECT (unix_timestamp('2018-01-21 18:00:00') - unix_timestamp('2018-01-10 11:00:00'))/60/60/24 AS daydiff
-FROM employee LIMIT 1;
+SELECT (unix_timestamp('2018-01-21 18:00:00') - unix_timestamp('2018-01-10 11:00:00'))/60/60/24 AS daydiff;
 
 --Get the file name form a Linux path
-SELECT
-reverse(split(reverse('/home/user/employee.txt'),'/')[0])
-AS linux_file_name FROM employee LIMIT 1;
-
---Functions not mentioned in the Hive WIKI
---Functions to check whether the value is null or not
-SELECT work_place, isnull(work_place) is_null, 
-isnotnull(work_place) is_not_null FROM employee;
-
---assert_true, throw an exception if 'condition' is not true. 
-SELECT assert_true(work_place IS NULL) FROM employee;
-
---elt(n, str1, str2, ...),returns the n-th string
-SELECT elt(2,'New York','Montreal','Toronto') FROM employee LIMIT 1;             
-
---Return the name of current_database
-SELECT current_database();    
+SELECT reverse(split(reverse('/home/user/employee.txt'),'/')[0]) AS linux_file_name;  
 
 --Transactions
 --Below configuration parameters must be set appropriately to turn on transaction support in Hive.

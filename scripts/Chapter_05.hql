@@ -161,6 +161,12 @@ SELECT (unix_timestamp('2018-01-21 18:00:00') - unix_timestamp('2018-01-10 11:00
 --Get the file name form a Linux path
 SELECT reverse(split(reverse('/home/user/employee.txt'),'/')[0]) AS linux_file_name;  
 
+--collect set or list
+SELECT 
+collect_set(sex_age.sex) AS sex_set,
+collect_list(sex_age.sex) AS sex_list
+FROM employee;
+
 --Transactions
 --Below configuration parameters must be set appropriately to turn on transaction support in Hive.
 SET hive.support.concurrency = true;

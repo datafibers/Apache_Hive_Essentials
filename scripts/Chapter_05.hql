@@ -216,16 +216,17 @@ quit_flag string
 );
 -- Populate data
 INSERT INTO TABLE employee_update VALUES 
-(100, 'Michael', '2017-02-01', '2018-01-01, 'Y'), -- People quite
+(100, 'Michael', '2017-02-01', '2018-01-01', 'Y'), -- People quite
 (102, 'Steven', '2018-01-02', null, 'N'), -- People has start_date update
-(105, 'Lily', '2018-04-01', null, 'N'); -- People newly started
+(105, 'Lily', '2018-04-01', null, 'N') -- People newly started
+;
 
 -- Do a data merge from employee_update to employee_trans
 MERGE INTO employee_trans as tar USING employee_update as src
 ON tar.emp_id = src.emp_id
-WHEN MATCHED and quit_flag <> 'Y' THEN UPDATE SET tar.start_date = src.start_date
-WHEN MATCHED and quit_flag = 'Y' THEN DELETE
-WHEN NOT MATCHED THEN INSERT;
+WHEN MATCHED and src.quit_flag <> 'Y' THEN UPDATE SET start_date = src.start_date
+WHEN MATCHED and src.quit_flag = 'Y' THEN DELETE
+WHEN NOT MATCHED THEN INSERT VALUES (src.emp_id, src.name, src.start_date, src.quit_date, src.quit_flag);
 
 --Show avaliable transactions
 SHOW TRANSACTIONS;

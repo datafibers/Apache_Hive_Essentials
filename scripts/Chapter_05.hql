@@ -179,5 +179,53 @@ SET hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
 SET hive.compactor.initiator.on = true;
 SET hive.compactor.worker.threads = 1;
 
+--create table support transaction
+CREATE TABLE employee_trans (
+emp_id int,
+name string,
+start_date date,
+quit_date date,
+quit_flag string
+) 
+CLUSTERED BY (emp_id) INTO 2 BUCKETS STORED AS ORC
+TBLPROPERTIES ('transactional'='true');
+
+--Populate data
+INSERT INTO TABLE employee_trans VALUES 
+(100, 'Michael', '2017-02-01', null, 'N'),
+(101, 'Will', '2017-03-01', null, 'N'),
+(102, 'Steven', '2018-01-01', null, 'N'),
+(104, 'Lucy', '2017-10-01', null, 'N');
+
+--Update
+UPDATE employee_trans SET quit_date = current_date, quit_flag = 'Y' WHERE emp_id = 104;
+SELECT quit_date, quit_flag FROM employee_trans WHERE emp_id = 104;
+
+--Delete
+DELETE FROM employee_trans WHERE emp_id = 104;
+SELECT * FROM employee_trans WHERE emp_id = 104;
+
+--Merge
+--prepare another table
+CREATE TABLE employee_update (
+emp_id int,
+name string,
+start_date date,
+quit_date date,
+quit_flag string
+);
+-- Populate data
+INSERT INTO TABLE employee_update VALUES 
+(100, 'Michael', '2017-02-01', '2018-01-01, 'Y'), -- People quite
+(102, 'Steven', '2018-01-02', null, 'N'), -- People has start_date update
+(105, 'Lily', '2018-04-01', null, 'N'); -- People newly started
+
+-- Do a data merge from employee_update to employee_trans
+MERGE INTO employee_trans as tar USING employee_update as src
+ON tar.emp_id = src.emp_id
+WHEN MATCHED and quit_flag <> 'Y' THEN UPDATE SET tar.start_date = src.start_date
+WHEN MATCHED and quit_flag = 'Y' THEN DELETE
+WHEN NOT MATCHED THEN INSERT;
+
 --Show avaliable transactions
 SHOW TRANSACTIONS;

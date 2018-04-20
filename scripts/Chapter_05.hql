@@ -230,3 +230,6 @@ WHEN NOT MATCHED THEN INSERT VALUES (src.emp_id, src.name, src.start_date, src.q
 
 --Show avaliable transactions
 SHOW TRANSACTIONS;
+
+--Show locks
+SHOW LOCKS;

@@ -59,6 +59,79 @@ SELECT count(distinct sex_age.sex) AS sex_uni_cnt FROM employee;
 --Use subquery to select unique value before aggregations for better performance
 SELECT count(*) AS sex_uni_cnt FROM (SELECT distinct sex_age.sex FROM employee) a;
 
+--Grouping Set
+SELECT 
+name, 
+start_date,
+count(sin_number) as sin_cnt 
+FROM employee_hr
+GROUP BY name, start_date 
+GROUPING SETS((name, start_date));
+--||-- equals to
+SELECT 
+name, 
+start_date, 
+count(sin_number) AS sin_cnt 
+FROM employee_hr
+GROUP BY name, start_date;
+
+SELECT 
+name, start_date, count(sin_number) as sin_cnt 
+FROM employee_hr
+GROUP BY name, start_date 
+GROUPING SETS(name, start_date);
+--||-- equals to
+SELECT 
+name, null as start_date, count(sin_number) as sin_cnt 
+FROM employee_hr
+GROUP BY name
+UNION ALL
+SELECT 
+null as name, start_date, count(sin_number) as sin_cnt 
+FROM employee_hr
+GROUP BY start_date;
+
+SELECT 
+name, start_date, count(sin_number) as sin_cnt 
+FROM employee_hr
+GROUP BY name, start_date 
+GROUPING SETS((name, start_date), name);
+--||-- equals to
+SELECT 
+name, start_date, count(sin_number) as sin_cnt 
+FROM employee_hr
+GROUP BY name, start_date
+UNION ALL
+SELECT 
+name, null as start_date, count(sin_number) as sin_cnt 
+FROM employee_hr
+GROUP BY name;
+
+SELECT 
+name, start_date, count(sin_number) as sin_cnt 
+FROM employee_hr
+GROUP BY name, start_date 
+GROUPING SETS((name, start_date), name, start_date, ());
+--||-- equals to
+SELECT 
+name, start_date, count(sin_number) AS sin_cnt 
+FROM employee_hr
+GROUP BY name, start_date
+UNION ALL
+SELECT 
+name, null as start_date, count(sin_number) AS sin_cnt 
+FROM employee_hr
+GROUP BY name
+UNION ALL
+SELECT 
+null as name, start_date, count(sin_number) AS sin_cnt 
+FROM employee_hr
+GROUP BY start_date
+UNION ALL
+SELECT 
+null as name, null as start_date, count(sin_number) AS sin_cnt 
+FROM employee_hr
+
 --GROUPING__ID
 SELECT GROUPING__ID, 
 BIN(CAST(GROUPING__ID AS BIGINT)) AS bit_vector, 

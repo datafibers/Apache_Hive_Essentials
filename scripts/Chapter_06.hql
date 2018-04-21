@@ -13,10 +13,6 @@ GROUP BY sex_age.sex;
 --SELECT sex_age.age, sex_age.sex, count(*) AS row_cnt 
 --FROM employee GROUP BY sex_age.sex;
 
---Find row count by sex and random age for each sex
-SELECT sex_age.sex,collect_set(sex_age.age)[0] AS random_age, 
-count(*) AS row_cnt FROM employee GROUP BY sex_age.sex;
-
 --Multiple aggregate functions are called in the same SELECT
 SELECT sex_age.sex, AVG(sex_age.age) AS avg_age, 
 count(*) AS row_cnt FROM employee GROUP BY sex_age.sex; 
@@ -34,11 +30,20 @@ AS female_age_sum FROM employee;
 
 --Nested aggregate functions are not allowed
 --FAILED: SemanticException [Error 10128]: Line 1:11 Not yet supported place for UDAF 'count'
---SELECT avg(count(*)) AS row_cnt FROM employee;                    
+--SELECT avg(count(*)) AS row_cnt FROM employee;    
+
+--Find aggregate on NULL
+SELECT max(null), min(null);
 
 --Aggregate functions can be also used with DISTINCT keyword to do aggregation on unique values.
-SELECT count(distinct sex_age.sex) AS sex_uni_cnt,
-count(distinct name) AS name_uni_cnt FROM employee;     
+SELECT count(distinct sex_age.sex) AS sex_uni_cnt, count(distinct name) AS name_uni_cnt FROM employee;     
+
+--Use max/min struct
+SELECT sex_age.sex, 
+max(struct(sex_age.age, name)).col1 as age,
+max(struct(sex_age.age, name)).col2 as name
+FROM employee
+GROUP BY sex_age.sex;
 
 --Trigger single reducer during the whole processing
 SELECT count(distinct sex_age.sex) AS sex_uni_cnt FROM employee;

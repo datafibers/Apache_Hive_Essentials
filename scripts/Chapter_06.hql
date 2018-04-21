@@ -59,9 +59,6 @@ SELECT count(distinct sex_age.sex) AS sex_uni_cnt FROM employee;
 --Use subquery to select unique value before aggregations for better performance
 SELECT count(*) AS sex_uni_cnt FROM (SELECT distinct sex_age.sex FROM employee) a;
 
---hive.map.aggr property controls whether to do aggregations in the map task. 
-SET hive.map.aggr=true;
-
 --GROUPING__ID
 SELECT GROUPING__ID, 
 BIN(CAST(GROUPING__ID AS BIGINT)) AS bit_vector, 

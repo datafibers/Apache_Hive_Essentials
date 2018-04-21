@@ -32,8 +32,16 @@ AS female_age_sum FROM employee;
 --FAILED: SemanticException [Error 10128]: Line 1:11 Not yet supported place for UDAF 'count'
 --SELECT avg(count(*)) AS row_cnt FROM employee;    
 
---Find aggregate on NULL
+--Aggregation across columns with NULL value.
 SELECT max(null), min(null);
+---Prepare a table for testing
+CREATE TABLE t (val1 int, val2 int);
+INSERT INTO TABLE t VALUES (1, 2),(null,2),(2,3);
+----Check the table rows 
+SELECT * FROM t;
+----The 2nd row (NULL, 2) are ignored when doing sum(val1+val2)
+SELECT sum(val1), sum(val1+val2) FROM t;                   
+SELECT sum(coalesce(val1,0)), sum(coalesce(val1,0)+val2) FROM t;
 
 --Aggregate functions can be also used with DISTINCT keyword to do aggregation on unique values.
 SELECT count(distinct sex_age.sex) AS sex_uni_cnt, count(distinct name) AS name_uni_cnt FROM employee;     
@@ -50,25 +58,6 @@ SELECT count(distinct sex_age.sex) AS sex_uni_cnt FROM employee;
 
 --Use subquery to select unique value before aggregations for better performance
 SELECT count(*) AS sex_uni_cnt FROM (SELECT distinct sex_age.sex FROM employee) a;
-
---Aggregation across columns with NULL value.
---Prepare a table for testing
-CREATE TABLE t
-AS
-SELECT * FROM
-(SELECT employee_id-99 AS val1, (employee_id-98) AS val2 FROM employee_hr 
-WHERE employee_id <= 101
-UNION ALL
-SELECT null val1, 2 AS val2 FROM employee_hr 
-WHERE employee_id = 100) a;
-
---Check the table rows 
-SELECT * FROM t;
-
---The 2nd row (NULL, 2) are ignored when doing sum(val1+val2)
-SELECT sum(val1), sum(val1+val2) FROM t;                   
-
-SELECT sum(coalesce(val1,0)), sum(coalesce(val1,0)+val2) FROM t;
 
 --hive.map.aggr property controls whether to do aggregations in the map task. 
 SET hive.map.aggr=true;

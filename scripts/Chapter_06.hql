@@ -2,7 +2,7 @@
 --Chapter 6 Code - Hive Data Aggregation and Sampling
 
 --Aggregation without GROUP BY columns
-SELECT count(*) AS row_cnt FROM employee;
+SELECT count(*) as rowcnt1, count(1) AS rowcnt2 FROM employee;
 
 --Aggregation with GROUP BY columns
 SELECT sex_age.sex, count(*) AS row_cnt FROM employee 

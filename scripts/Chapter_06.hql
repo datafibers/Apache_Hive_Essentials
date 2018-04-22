@@ -164,19 +164,42 @@ ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '|'
 STORED AS TEXTFILE;
 
-LOAD DATA LOCAL INPATH
-'/home/dayongd/Downloads/employee_contract.txt' 
+LOAD DATA INPATH
+'/tmp/hivedemo/data/employee_contract.txt' 
 OVERWRITE INTO TABLE employee_contract;
 
---The regular aggregations are used as analytic functions
-SELECT name, dept_num, salary,
-COUNT(*) OVER (PARTITION BY dept_num) AS row_cnt,
-SUM(salary) OVER(PARTITION BY dept_num ORDER BY dept_num) AS deptTotal,
-SUM(salary) OVER(ORDER BY dept_num) AS runningTotal1,
-SUM(salary) OVER(ORDER BY dept_num, name rows unbounded 
-preceding) AS runningTotal2
+--window aggregate functions
+SELECT 
+name, 
+dept_num as deptno, 
+salary,
+count(*) OVER (PARTITION BY dept_num) as cnt,
+count(distinct dept_num) OVER (PARTITION BY dept_num) as cnt,
+sum(salary) OVER(PARTITION BY dept_num ORDER BY dept_num) as sum1,
+sum(salary) OVER(ORDER BY dept_num) as sum2,
+sum(salary) OVER(ORDER BY dept_num, name) as sum3
 FROM employee_contract
-ORDER BY dept_num, name;
+ORDER BY deptno, name;
+
+--window sorting functions
+SELECT 
+name, 
+dept_num as deptno, 
+salary,
+row_number() OVER () as rnum,
+rank() OVER (PARTITION BY dept_num ORDER BY salary) as rk, 
+dense_rank() OVER (PARTITION BY dept_num ORDER BY salary) as drk,
+percent_rank() OVER(PARTITION BY dept_num ORDER BY salary) as prk,
+ntile(4) OVER(PARTITION BY dept_num ORDER BY salary) as ntile
+FROM employee_contract
+ORDER BY deptno, name;
+
+--aggregate in over clause
+SELECT
+ept_num,
+rank() OVER (PARTITION BY dept_num ORDER BY sum(salary)) as rk
+FROM employee_contract
+GROUP BY dept_num;
 
 --Other analytic functions
 SELECT name, dept_num, salary,

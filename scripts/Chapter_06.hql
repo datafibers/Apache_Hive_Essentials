@@ -33,7 +33,7 @@ AS female_age_sum FROM employee;
 --SELECT avg(count(*)) AS row_cnt FROM employee;    
 
 --Aggregation across columns with NULL value.
-SELECT max(null), min(null);
+SELECT max(null), min(null), count(null);
 ---Prepare a table for testing
 CREATE TABLE t (val1 int, val2 int);
 INSERT INTO TABLE t VALUES (1, 2),(null,2),(2,3);
@@ -140,8 +140,8 @@ FROM employee_hr
 GROUP BY start_date, name WITH CUBE ORDER BY start_date;
 
 --Aggregation condition – HAVING
-SELECT sex_age.age FROM employee 
-GROUP BY sex_age.age HAVING count(*)<=1;
+SELECT sex_age.age FROM employee GROUP BY sex_age.age HAVING count(*)=1;
+SELECT sex_age.age, count(*) as cnt FROM employee GROUP BY sex_age.age HAVING cnt=1;
 
 --If we do not use HAVING, we can use subquery as follows. 
 SELECT a.age

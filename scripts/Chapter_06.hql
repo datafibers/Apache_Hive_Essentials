@@ -212,7 +212,7 @@ first_value(salary) OVER (PARTITION BY dept_num ORDER BY salary) as fval,
 last_value(salary) OVER (PARTITION BY dept_num ORDER BY salary) as lvalue,
 last_value(salary) OVER (PARTITION BY dept_num ORDER BY salary RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS lvalue2
 FROM employee_contract 
-ORDER BY deptno, name;
+ORDER BY deptno, salary;
 
 --window expression
 SELECT name, dept_num AS dept, salary AS sal,

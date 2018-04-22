@@ -201,35 +201,20 @@ rank() OVER (PARTITION BY dept_num ORDER BY sum(salary)) as rk
 FROM employee_contract
 GROUP BY dept_num;
 
---Other analytic functions
-SELECT name, dept_num, salary,
-RANK() OVER (PARTITION BY dept_num ORDER BY salary) AS rank, 
-DENSE_RANK() OVER (PARTITION BY dept_num ORDER BY salary) 
-AS dense_rank,
-ROW_NUMBER() OVER () AS row_num,
-ROUND((CUME_DIST() OVER (PARTITION BY dept_num 
-ORDER BY salary)), 1) AS cume_dist,
-PERCENT_RANK() OVER(PARTITION BY dept_num 
-ORDER BY salary) AS percent_rank,
-NTILE(4) OVER(PARTITION BY dept_num ORDER BY salary) AS ntile
-FROM employee_contract
-ORDER BY dept_num;
+--window analytics function
+SELECT 
+name,
+dept_num as deptno,
+salary,
+lead(salary, 2) OVER (PARTITION BY dept_num ORDER BY salary) as lead,
+lag(salary, 2, 0) OVER (PARTITION BY dept_num ORDER BY salary) as lag,
+first_value(salary) OVER (PARTITION BY dept_num ORDER BY salary) as fval,
+last_value(salary) OVER (PARTITION BY dept_num ORDER BY salary) as lvalue,
+last_value(salary) OVER (PARTITION BY dept_num ORDER BY salary RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS lvalue2
+FROM employee_contract 
+ORDER BY deptno, name;
 
-SELECT name, dept_num, salary,
-LEAD(salary, 2) OVER(PARTITION BY dept_num 
-ORDER BY salary) AS lead,
-LAG(salary, 2, 0) OVER(PARTITION BY dept_num 
-ORDER BY salary) AS lag,
-FIRST_VALUE(salary) OVER (PARTITION BY dept_num 
-ORDER BY salary) AS first_value,
-LAST_VALUE(salary) OVER (PARTITION BY dept_num 
-ORDER BY salary) AS last_value_default,
-LAST_VALUE(salary) OVER (PARTITION BY dept_num 
-ORDER BY salary 
-RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
-AS last_value
-FROM employee_contract ORDER BY dept_num;
-
+--window expression
 SELECT name, dept_num AS dept, salary AS sal,
 MAX(salary) OVER (PARTITION BY dept_num ORDER BY
 name ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) win1,

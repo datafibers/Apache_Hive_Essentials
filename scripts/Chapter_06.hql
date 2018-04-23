@@ -269,9 +269,9 @@ SELECT name FROM employee_hr DISTRIBUTE BY rand() SORT BY rand() LIMIT 2;
 
 --Bucket table sampling example
 --based on whole row
-SELECT name FROM employee_id_buckets TABLESAMPLE(BUCKET 1 OUT OF 2 ON rand()) a;
+SELECT name FROM employee_trans TABLESAMPLE(BUCKET 1 OUT OF 2 ON rand()) a;
 --based on bucket column
-SELECT name FROM employee_id_buckets TABLESAMPLE(BUCKET 1 OUT OF 2 ON employee_id) a;
+SELECT name FROM employee_trans TABLESAMPLE(BUCKET 1 OUT OF 2 ON emp_id) a;
 
 --Block sampling - Sample by rows
 SELECT name FROM employee TABLESAMPLE(1 ROWS) a;

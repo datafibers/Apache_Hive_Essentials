@@ -245,14 +245,14 @@ ORDER BY dno, name;
 --window reference
 SELECT name, dept_num, salary,
 MAX(salary) OVER w1 AS win1,
-MAX(salary) OVER w1 AS win2,
-MAX(salary) OVER w1 AS win3
+MAX(salary) OVER w2 AS win2,
+MAX(salary) OVER w3 AS win3
 FROM employee_contract
-ORDER BY dept_num, name
 WINDOW
-w1 AS (PARTITION BY dept_num ORDER BY name ROWS BETWEEN 2 PRECEDING AND CURRENT ROW),
-w2 AS w3,
-w3 AS (PARTITION BY dept_num ORDER BY name ROWS BETWEEN 1 PRECEDING AND 2 FOLLOWING);
+w1 as (PARTITION BY dept_num ORDER BY name ROWS BETWEEN 2 PRECEDING AND CURRENT ROW),
+w2 as w3,
+w3 as (PARTITION BY dept_num ORDER BY name ROWS BETWEEN 1 PRECEDING AND 2 FOLLOWING)
+;
 
 --window with range type
 SELECT name, salary, start_year,

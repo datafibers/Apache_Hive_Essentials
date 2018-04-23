@@ -264,8 +264,10 @@ FROM
 ) a;
 
 --Bucket table sampling example
-SELECT name FROM employee_id_buckets 
-TABLESAMPLE(BUCKET 1 OUT OF 2 ON rand()) a;
+--based on whole row
+SELECT name FROM employee_id_buckets TABLESAMPLE(BUCKET 1 OUT OF 2 ON rand()) a;
+--based on bucket column
+SELECT name FROM employee_id_buckets TABLESAMPLE(BUCKET 1 OUT OF 2 ON employee_id) a;
 
 --Block sampling - Sample by rows
 SELECT name FROM employee_id_buckets TABLESAMPLE(4 ROWS) a;

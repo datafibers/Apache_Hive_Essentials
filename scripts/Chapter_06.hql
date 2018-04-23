@@ -270,10 +270,10 @@ SELECT name FROM employee_id_buckets TABLESAMPLE(BUCKET 1 OUT OF 2 ON rand()) a;
 SELECT name FROM employee_id_buckets TABLESAMPLE(BUCKET 1 OUT OF 2 ON employee_id) a;
 
 --Block sampling - Sample by rows
-SELECT name FROM employee_id_buckets TABLESAMPLE(4 ROWS) a;
+SELECT name FROM employee TABLESAMPLE(1 ROWS) a;
 
 --Sample by percentage of data size
-SELECT name FROM employee_id_buckets TABLESAMPLE(10 PERCENT) a;
+SELECT name FROM employee TABLESAMPLE(50 PERCENT) a;
 
 --Sample by data size
-SELECT name FROM employee_id_buckets TABLESAMPLE(3M) a;   
+SELECT name FROM employee TABLESAMPLE(3b) a;   

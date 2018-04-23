@@ -133,11 +133,20 @@ null as name, null as start_date, count(sin_number) AS sin_cnt
 FROM employee_hr
 
 --GROUPING__ID
-SELECT GROUPING__ID, 
-BIN(CAST(GROUPING__ID AS BIGINT)) AS bit_vector, 
-name, start_date, count(employee_id) emp_id_cnt 
+SELECT 
+name, start_date, count(employee_id) as emp_id_cnt,
+GROUPING__ID,
+bin(cast(GROUPING__ID as bigint)) as bit_vector
+FROM employee_hr
+GROUP BY name, start_date
+WITH CUBE ORDER BY start_date;
+
+--Grouping function
+SELECT 
+name, start_date, count(employee_id) emp_id_cnt,
+grouping(name) as gp_name, grouping(start_date) as gp_sd
 FROM employee_hr 
-GROUP BY start_date, name WITH CUBE ORDER BY start_date;
+GROUP BY name, start_date WITH CUBE;
 
 --Aggregation condition – HAVING
 SELECT sex_age.age FROM employee GROUP BY sex_age.age HAVING count(*)=1;

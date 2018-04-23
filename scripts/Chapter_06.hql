@@ -255,15 +255,14 @@ w3 as (PARTITION BY dept_num ORDER BY name ROWS BETWEEN 1 PRECEDING AND 2 FOLLOW
 ;
 
 --window with range type
-SELECT name, salary, start_year,
-MAX(salary) OVER (PARTITION BY dept_num ORDER BY 
-start_year RANGE BETWEEN 2 PRECEDING AND CURRENT ROW) win1
-FROM
-(
-  SELECT name, salary, dept_num, 
-  YEAR(start_date) AS start_year
-  FROM employee_contract
-) a;
+SELECT 
+dept_num, start_date, name, salary, 
+max(salary) OVER (PARTITION BY dept_num ORDER BY salary
+RANGE BETWEEN 500 PRECEDING AND 1000 FOLLOWING) win1,
+max(salary) OVER (PARTITION BY dept_num ORDER BY salary
+RANGE BETWEEN 500 PRECEDING AND CURRENT ROW) win2
+FROM employee_contract
+order by dept_num, start_date;
 
 --Bucket table sampling example
 --based on whole row

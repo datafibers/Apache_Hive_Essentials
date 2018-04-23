@@ -264,6 +264,9 @@ RANGE BETWEEN 500 PRECEDING AND CURRENT ROW) win2
 FROM employee_contract
 order by dept_num, start_date;
 
+--random sampling
+SELECT name FROM employee_hr DISTRIBUTE BY rand() SORT BY rand() LIMIT 2;
+
 --Bucket table sampling example
 --based on whole row
 SELECT name FROM employee_id_buckets TABLESAMPLE(BUCKET 1 OUT OF 2 ON rand()) a;

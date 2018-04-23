@@ -176,7 +176,7 @@ name,
 dept_num as deptno, 
 salary,
 count(*) OVER (PARTITION BY dept_num) as cnt,
-count(distinct dept_num) OVER (PARTITION BY dept_num) as cnt,
+count(distinct dept_num) OVER (PARTITION BY dept_num) as dcnt,
 sum(salary) OVER(PARTITION BY dept_num ORDER BY dept_num) as sum1,
 sum(salary) OVER(ORDER BY dept_num) as sum2,
 sum(salary) OVER(ORDER BY dept_num, name) as sum3

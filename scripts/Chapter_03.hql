@@ -333,8 +333,7 @@ FIELDS TERMINATED BY '|'
 COLLECTION ITEMS TERMINATED BY ','
 MAP KEYS TERMINATED BY ':';
 
-LOAD DATA INPATH '/tmp/hivedemo/data/employee_id.txt' 
-OVERWRITE INTO TABLE employee_id
+LOAD DATA INPATH '/tmp/hivedemo/data/employee_id.txt' OVERWRITE INTO TABLE employee_id;
 
 --Create the bucket table
 CREATE TABLE employee_id_buckets                         

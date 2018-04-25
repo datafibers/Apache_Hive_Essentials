@@ -2,17 +2,17 @@
 --Chapter 7 Code - Performance Considerations
 --Query explain
 EXPLAIN SELECT sex_age.sex, count(*) FROM employee_partitioned 
-WHERE year=2014 GROUP BY sex_age.sex LIMIT 2;
+WHERE year=2018 GROUP BY sex_age.sex LIMIT 2;
 
 --ANALYZE statement
 ANALYZE TABLE employee COMPUTE STATISTICS;                 
 
-ANALYZE TABLE employee_partitioned PARTITION(year=2014, month=12) COMPUTE STATISTICS;
+ANALYZE TABLE employee_partitioned PARTITION(year=2018, month=12) COMPUTE STATISTICS;
 
 ANALYZE TABLE employee_id COMPUTE STATISTICS FOR COLUMNS employee_id;           
 
 --Check the statistics  
-DESCRIBE EXTENDED employee_partitioned PARTITION(year=2014, month=12);
+DESCRIBE EXTENDED employee_partitioned PARTITION(year=2018, month=12);
 
 DESCRIBE EXTENDED employee;
 

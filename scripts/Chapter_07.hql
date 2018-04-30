@@ -112,3 +112,12 @@ SET hive.skewjoin.key=100000;
 
 --Skew data in GROUP BY 
 SET hive.groupby.skewindata=true; 
+
+--Job engine
+--vectorized
+SET hive.vectorized.execution.enabled=true; -- default false
+--cbo
+SET hive.cbo.enable=true; -- default true after v0.14.0
+SET hive.compute.query.using.stats=true; -- default false
+SET hive.stats.fetch.column.stats=true; -- default false
+SET hive.stats.fetch.partition.stats=true; -- default true

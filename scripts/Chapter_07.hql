@@ -1,13 +1,16 @@
 --Apache Hive Essentials
 --Chapter 7 Code - Performance Considerations
 --Query explain
-EXPLAIN SELECT sex_age.sex, count(*) FROM employee_partitioned 
-WHERE year=2018 GROUP BY sex_age.sex LIMIT 2;
+EXPLAIN SELECT sex_age.sex, count(*) FROM employee_partitioned WHERE year=2018 GROUP BY sex_age.sex LIMIT 2;
 
 --ANALYZE statement
-ANALYZE TABLE employee COMPUTE STATISTICS;                 
+ANALYZE TABLE employee COMPUTE STATISTICS;
+
+ANALYZE TABLE employee COMPUTE STATISTICS NOSCAN;
 
 ANALYZE TABLE employee_partitioned PARTITION(year=2018, month=12) COMPUTE STATISTICS;
+
+ANALYZE TABLE employee_partitioned PARTITION(year, month) COMPUTE STATISTICS;
 
 ANALYZE TABLE employee_id COMPUTE STATISTICS FOR COLUMNS employee_id;           
 
@@ -35,12 +38,25 @@ WITH DEFERRED REBUILD;
 ALTER INDEX idx_id_employee_id ON employee_id REBUILD;
 ALTER INDEX idx_sex_employee_id ON employee_id REBUILD;
 
+--show index tables
+SHOW TABLES '*idx*';
+
 --Show index
 DESC default__employee_id_idx_id_employee_id__;
+SELECT * FROM default__employee_id_idx_id_employee_id__;
 
 --Drop index
 DROP INDEX idx_id_employee_id ON employee_id;
 DROP INDEX idx_sex_employee_id ON employee_id;
+
+--Use screw tables
+CREATE TABLE sample_skewed_table (
+dept_no int, 
+dept_name string
+) 
+SKEWED BY (dept_no) ON (1000, 2000);
+
+DESC FORMATTED sample_skewed_table;
 
 --Data file optimization
 --File format

@@ -29,14 +29,17 @@ FROM employee;
 
 --LazySimpleSerDe
 CREATE TABLE test_serde_lz
-STORED AS TEXTFILE AS
+STORED as TEXTFILE as
 SELECT name from employee;
 
 --ColumnarSerDe
-CREATE TABLE test_serde_cs
-ROW FORMAT SERDE
-'org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe'
-STORED AS RCFile AS
+CREATE TABLE test_serde_rc
+STORED as RCFile as
+SELECT name from employee;
+
+--ColumnarSerDe
+CREATE TABLE test_serde_orc
+STORED as ORC as
 SELECT name from employee;
 
 --RegexSerDe-Parse , seperate fields
@@ -51,7 +54,7 @@ WITH SERDEPROPERTIES(
 'input.regex' = '([^,]*),([^,]*),([^,]*)',
 'output.format.string' = '%1$s %2$s %3$s'
 )
-STORED AS TEXTFILE;
+STORED as TEXTFILE;
 
 --HBaseSerDe. Make sure you have HBase installed before running query below.
 CREATE TABLE test_serde_hb(
@@ -78,17 +81,17 @@ age string
 )
 ROW FORMAT SERDE
 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
-STORED AS INPUTFORMAT
+STORED as AVRO
 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
 OUTPUTFORMAT
 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat';
 
 --ParquetHiveSerDe
 CREATE TABLE test_serde_parquet
-STORED AS PARQUET AS
+STORED as PARQUET as
 SELECT name from employee;
 
---OpenCSVSerDe. Before Hive 0.14.0, You can also install the implementation from https://github.com/ogrodnek/csv-serde.
+--OpenCSVSerDe
 CREATE TABLE test_serde_csv(
 name string,
 sex string,
@@ -96,13 +99,18 @@ age string
 )
 ROW FORMAT SERDE
 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
-STORED AS TEXTFILE;
+WITH SERDEPROPERTIES (
+  "separatorChar" = "\t",
+  "quoteChar" = "'",
+  "escapeChar" = "\\"
+) 
+STORED as TEXTFILE;
 
---JSONSerDe, make sure you install it (https://github.com/rcongiu/Hive-JSON-Serde) before running query below.
+--JSONSerDe
 CREATE TABLE test_serde_js(
 name string,
 sex string,
 age string
 )
-ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
-STORED AS TEXTFILE;
+ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
+STORED as TEXTFILE;

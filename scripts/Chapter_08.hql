@@ -2,16 +2,27 @@
 --Chapter 8 Code - Extensibility Considerations
    
 --UDF deployment 
-ADD JAR /home/dayongd/hive/lib/hive-to-upper-udf.jar;
-CREATE TEMPORARY FUNCTION toUpper AS 'com.packtpub.hive.essentials.hiveudf.ToUpper';
+CREATE TEMPORARY FUNCTION tmptoUpper 
+as 'com.packtpub.hive.essentials.hiveudf.toupper';
+USING JAR 'hdfs:///app/hive/function/hiveudf-1.0.jar';
+
+CREATE FUNCTION toUpper
+as 'hive.essentials.hiveudf.ToUpper' 
+USING JAR 'hdfs:///app/hive/function/hiveudf-1.0.jar';
+
 SHOW FUNCTIONS ToUpper;
 DESCRIBE FUNCTION ToUpper;
 DESCRIBE FUNCTION EXTENDED ToUpper;
-SELECT toUpper(name) FROM employee LIMIT 1000;
-DROP TEMPORARY FUNCTION IF EXISTS toUpper;
+
+RELOAD FUNCTION;
+
+SELECT name, toUpper(name) as cap_name, tmptoUpper(name) as cname FROM employee;
+
+DROP TEMPORARY FUNCTION IF EXISTS tmptoUpper;
+DROP FUNCTION IF EXISTS toUpper;
  
 --Streaming, call the script in Hive CLI from HQL.
-ADD FILE /home/dayongd/Downloads/upper.py;
+ADD FILE /tmp/upper.py;
 SELECT TRANSFORM (name,work_place[0]) 
 USING 'python upper.py' AS (CAP_NAME,CAP_PLACE) 
 FROM employee;

@@ -73,18 +73,34 @@ WITH SERDEPROPERTIES (
 )
 TBLPROPERTIES("hbase.table.name" = "test_serde");
 
---AvroSerDe
-CREATE TABLE test_serde_avro(
+--AvroSerDe 3 ways
+CREATE TABLE test_serde_avro( -- Specify schema directly 
 name string,
 sex string,
 age string
 )
-ROW FORMAT SERDE
-'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED as AVRO;
+
+CREATE TABLE test_serde_avro2 -- Specify schema from properties 
 STORED as AVRO
-'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
-OUTPUTFORMAT
-'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat';
+TBLPROPERTIES (
+  'avro.schema.literal'='{
+   "type":"record",
+   "name":"user",
+   "fields":[ 
+   {"name":"name", "type":"string"}, 
+   {"name":"sex", "type":"string", "aliases":["gender"]}, 
+   {"name":"age", "type":"string", "default":"null"}
+   ]
+  }'
+);
+
+-- Using schema file below is more flexiable
+CREATE TABLE test_serde_avro3 -- Specify schema from schema file 
+STORED as AVRO
+TBLPROPERTIES (
+'avro.schema.url'='/tmp/schema/test_avro_schema.avsc'
+);
 
 --ParquetHiveSerDe
 CREATE TABLE test_serde_parquet

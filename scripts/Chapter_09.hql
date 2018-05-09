@@ -7,7 +7,7 @@ name,
 md5(name) as md5_name, -- 128 bit
 sha1(name) as sha1_name, -- 160 bit
 sha2(name, 256) as sha2_name -- 256 bit
-sha1(name) as sha1_name FROM employee;
+FROM employee;
 
 --Use data mask udf
 select 

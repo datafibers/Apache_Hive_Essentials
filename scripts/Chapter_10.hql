@@ -2,7 +2,7 @@
 --Chapter 10 Code - Work with Other Tools
 
 --Hive HBase integration
-CREATE TABLE hbase_table_sample(
+CREATE EXTERNAL TABLE hbase_table_sample(
 id int,
 value1 string,
 value2 string,
@@ -14,7 +14,7 @@ TBLPROPERTIES ("hbase.table.name" = "table_name_in_hbase");
 
 --Hive Mongo integration
 ADD JAR mongo-hadoop-core-2.0.2.jar;
-CREATE TABLE mongodb_table_sample(
+CREATE EXTERNAL TABLE mongodb_table_sample(
 id int,
 value1 string,
 value2 string

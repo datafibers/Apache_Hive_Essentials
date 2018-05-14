@@ -284,6 +284,10 @@ SHOW PARTITIONS employee_partitioned;
 --Drop partitions
 ALTER TABLE employee_partitioned DROP PARTITION (year=2018, month=11);
 
+ALTER TABLE employee_partitioned DROP IF EXISTS PARTITION (year=2017); -- Drop all partitions in 2017
+
+ALTER TABLE employee_partitioned DROP IF EXISTS PARTITION (month=9);
+
 SHOW PARTITIONS employee_partitioned;
 
 --Rename partitions

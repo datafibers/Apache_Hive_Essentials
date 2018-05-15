@@ -15,24 +15,24 @@ SELECT DISTINCT name, work_place FROM employee;
 
 --Select with UDF, IF, and CASE WHEN
 SELECT 
-CASE WHEN sex_age.sex = 'Female' THEN 'Ms.'
+CASE WHEN gender_age.gender = 'Female' THEN 'Ms.'
 ELSE 'Mr.' END as title,
 name, 
 IF(array_contains(work_place, 'New York'), 'US', 'CA') as country
 FROM employee;
 
 --Nest SELECT after the FROM
-SELECT name, sex_age.sex AS sex
+SELECT name, gender_age.gender AS gender
 FROM(
 SELECT * FROM employee
-WHERE sex_age.sex = 'Male'
+WHERE gender_age.gender = 'Male'
 ) t1;
 
 --Nest SELECT using CTE
 WITH t1 AS (
 SELECT * FROM employee
-WHERE sex_age.sex = 'Male')
-SELECT name, sex_age.sex AS sex FROM t1;
+WHERE gender_age.gender = 'Male')
+SELECT name, gender_age.gender AS gender FROM t1;
 
 --Select with expression
 SELECT concat('1','+','3','=',cast((1 + 3) as string)) as res;
@@ -47,24 +47,24 @@ SELECT name, work_place FROM employee WHERE name = 'Michael';
 SELECT name, work_place FROM employee WHERE name = 'Michael' LIMIT 1;
 
 --Filter with in
-SELECT name FROM employee WHERE sex_age.age in (27, 30);
+SELECT name FROM employee WHERE gender_age.age in (27, 30);
 
 --In for multiple columns Works after v2.1.0
 SELECT 
-name, sex_age 
+name, gender_age
 FROM employee 
-WHERE (sex_age.sex , sex_age.age) IN (('Female', 27), ('Male', 27 + 3));
+WHERE (gender_age.gender , gender_age.age) IN (('Female', 27), ('Male', 27 + 3));
 
 --Subquery in
-SELECT name, sex_age.sex AS sex
+SELECT name, gender_age.gender AS gender
 FROM employee a
-WHERE a.name IN (SELECT name FROM employee WHERE sex_age.sex = 'Male');
+WHERE a.name IN (SELECT name FROM employee WHERE gender_age.gender = 'Male');
 
 --Subquery exists
-SELECT name, sex_age.sex AS sex
+SELECT name, gender_age.gender AS gender
 FROM employee a
 WHERE EXISTS
-(SELECT * FROM employee b WHERE a.sex_age.sex = b.sex_age.sex AND b.sex_age.sex = 'Male');
+(SELECT * FROM employee b WHERE a.gender_age.gender = b.gender_age.gender AND b.gender_age.gender = 'Male');
  
 --Prepare another table for join and load data
 CREATE TABLE IF NOT EXISTS employee_hr

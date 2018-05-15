@@ -5,7 +5,7 @@
 CREATE TABLE employee (
   name string,
   work_place ARRAY<string>,
-  sex_age STRUCT<sex:string,age:int>,
+  gender_age STRUCT<gender:string,age:int>,
   skills_score MAP<string,int>,
   depart_title MAP<STRING,ARRAY<STRING>>
 )
@@ -30,9 +30,9 @@ SELECT work_place FROM employee;
 SELECT work_place[0] AS col_1, work_place[1] AS col_2, work_place[2] AS col_3 FROM employee;
 
 --Query the STRUCT in the table
-SELECT sex_age FROM employee;
+SELECT gender_age FROM employee;
 
-SELECT sex_age.sex, sex_age.age FROM employee;
+SELECT gender_age.gender, gender_age.age FROM employee;
 
 --Query the MAP in the table
 SELECT skills_score FROM employee;
@@ -94,7 +94,7 @@ ALTER DATABASE myhivebook SET OWNER user dayongd;
 CREATE TABLE IF NOT EXISTS employee_internal (
   name string,
   work_place ARRAY<string>,
-  sex_age STRUCT<sex:string,age:int>,
+  gender_age STRUCT<gender:string,age:int>,
   skills_score MAP<string,int>,
   depart_title MAP<STRING,ARRAY<STRING>>
 )
@@ -111,7 +111,7 @@ LOAD DATA INPATH '/tmp/hivedemo/data/employee.txt' OVERWRITE INTO TABLE employee
 CREATE EXTERNAL TABLE IF NOT EXISTS employee_external (
    name string,
    work_place ARRAY<string>,
-   sex_age STRUCT<sex:string,age:int>,
+   gender_age STRUCT<gender:string,age:int>,
    skills_score MAP<string,int>,
    depart_title MAP<STRING,ARRAY<STRING>>
 )
@@ -132,7 +132,7 @@ CREATE TABLE ctas_employee AS SELECT * FROM employee_external;
 CREATE TEMPORARY TABLE IF NOT EXISTS tmp_emp1 (
 name string,
 work_place ARRAY<string>,
-sex_age STRUCT<sex:string,age:int>,
+gender_age STRUCT<gender:string,age:int>,
 skills_score MAP<string,int>,
 depart_title MAP<STRING,ARRAY<STRING>>
 ); 
@@ -144,8 +144,8 @@ CREATE TEMPORARY TABLE tmp_emp3 LIKE tmp_emp1;
 --Create Table As SELECT (CTAS) with Common Table Expression (CTE) 
 CREATE TABLE cte_employee AS
 WITH r1 AS (SELECT name FROM r2 WHERE name = 'Michael'),
-r2 AS (SELECT name FROM employee WHERE sex_age.sex= 'Male'),
-r3 AS (SELECT name FROM employee WHERE sex_age.sex= 'Female')
+r2 AS (SELECT name FROM employee WHERE gender_age.gender= 'Male'),
+r3 AS (SELECT name FROM employee WHERE gender_age.gender= 'Female')
 SELECT * FROM r1 UNION ALL select * FROM r3;
 
 SELECT * FROM cte_employee;
@@ -225,7 +225,7 @@ ALTER TABLE c_employee SET FILEFORMAT TEXTFILE;
 DESC employee_internal; 
 
 --Change column type
-ALTER TABLE employee_internal CHANGE name employee_name string AFTER sex_age;
+ALTER TABLE employee_internal CHANGE name employee_name string AFTER gender_age;
 
 --Verify the changes 
 DESC employee_internal; 
@@ -258,7 +258,7 @@ CREATE TABLE employee_partitioned
 (
   name string,
   work_place ARRAY<string>,
-  sex_age STRUCT<sex:string,age:int>,
+  gender_age STRUCT<gender:string,age:int>,
   skills_score MAP<string,int>,
   depart_title MAP<STRING,ARRAY<STRING>>
 )
@@ -328,7 +328,7 @@ CREATE TABLE employee_id
   name string,
   employee_id int,
   work_place ARRAY<string>,
-  sex_age STRUCT<sex:string,age:int>,
+  gender_age STRUCT<gender:string,age:int>,
   skills_score MAP<string,int>,
   depart_title MAP<STRING,ARRAY<STRING>>
 )
@@ -345,7 +345,7 @@ CREATE TABLE employee_id_buckets
   name string,
   employee_id int,
   work_place ARRAY<string>,
-  sex_age STRUCT<sex:string,age:int>,
+  gender_age STRUCT<gender:string,age:int>,
   skills_score MAP<string,int>,
   depart_title MAP<STRING,ARRAY<STRING>>
 )

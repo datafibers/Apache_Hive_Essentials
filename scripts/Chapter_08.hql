@@ -45,7 +45,7 @@ SELECT name from employee;
 --RegexSerDe-Parse , seperate fields
 CREATE TABLE test_serde_rex(
 name string,
-sex string,
+gender string,
 age string
 )
 ROW FORMAT SERDE
@@ -60,7 +60,7 @@ STORED as TEXTFILE;
 CREATE TABLE test_serde_hb(
 id string,
 name string,
-sex string,
+gender string,
 age string
 )
 ROW FORMAT SERDE
@@ -69,14 +69,14 @@ STORED BY
 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
 WITH SERDEPROPERTIES (
 "hbase.columns.mapping"=
-":key,info:name,info:sex,info:age"
+":key,info:name,info:gender,info:age"
 )
 TBLPROPERTIES("hbase.table.name" = "test_serde");
 
 --AvroSerDe 3 ways
 CREATE TABLE test_serde_avro( -- Specify schema directly 
 name string,
-sex string,
+gender string,
 age string
 )
 STORED as AVRO;
@@ -89,7 +89,7 @@ TBLPROPERTIES (
    "name":"user",
    "fields":[ 
    {"name":"name", "type":"string"}, 
-   {"name":"sex", "type":"string", "aliases":["gender"]}, 
+   {"name":"gender", "type":"string", "aliases":["gender"]},
    {"name":"age", "type":"string", "default":"null"}
    ]
   }'
@@ -110,7 +110,7 @@ SELECT name from employee;
 --OpenCSVSerDe
 CREATE TABLE test_serde_csv(
 name string,
-sex string,
+gender string,
 age string
 )
 ROW FORMAT SERDE
@@ -125,7 +125,7 @@ STORED as TEXTFILE;
 --JSONSerDe
 CREATE TABLE test_serde_js(
 name string,
-sex string,
+gender string,
 age string
 )
 ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'

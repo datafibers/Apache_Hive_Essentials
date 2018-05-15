@@ -1,7 +1,7 @@
 --Apache Hive Essentials
 --Chapter 7 Code - Performance Considerations
 --Query explain
-EXPLAIN SELECT sex_age.sex, count(*) FROM employee_partitioned WHERE year=2018 GROUP BY sex_age.sex LIMIT 2;
+EXPLAIN SELECT gender_age.gender, count(*) FROM employee_partitioned WHERE year=2018 GROUP BY gender_age.gender LIMIT 2;
 
 --ANALYZE statement
 ANALYZE TABLE employee COMPUTE STATISTICS;
@@ -29,14 +29,14 @@ ON TABLE employee_id (employee_id)
 AS 'COMPACT'
 WITH DEFERRED REBUILD;
 
-CREATE INDEX idx_sex_employee_id
-ON TABLE employee_id (sex_age)
+CREATE INDEX idx_gender_employee_id
+ON TABLE employee_id (gender_age)
 AS 'BITMAP'
 WITH DEFERRED REBUILD;
 
 --Rebuild index
 ALTER INDEX idx_id_employee_id ON employee_id REBUILD;
-ALTER INDEX idx_sex_employee_id ON employee_id REBUILD;
+ALTER INDEX idx_gender_employee_id ON employee_id REBUILD;
 
 --show index tables
 SHOW TABLES '*idx*';
@@ -47,7 +47,7 @@ SELECT * FROM default__employee_id_idx_id_employee_id__;
 
 --Drop index
 DROP INDEX idx_id_employee_id ON employee_id;
-DROP INDEX idx_sex_employee_id ON employee_id;
+DROP INDEX idx_gender_employee_id ON employee_id;
 
 --Use screw tables
 CREATE TABLE sample_skewed_table (

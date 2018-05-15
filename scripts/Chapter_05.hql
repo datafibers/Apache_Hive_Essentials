@@ -21,14 +21,14 @@ OVERWRITE INTO TABLE employee;
 
 --Data Exchange - INSERT
 --Check the target table
-SELECT name, work_place, sex_age FROM employee;              
+SELECT name, work_place, gender_age FROM employee;
 
 --Populate data from SELECT
 INSERT INTO TABLE employee
 SELECT * FROM ctas_employee;
 
 --Verify the data loaded
-SELECT name, work_place, sex_age FROM employee;    
+SELECT name, work_place, gender_age FROM employee;
 
 --Insert specified columns
 CREATE TABLE emp_simple( -- Create a test table only has primary types
@@ -65,7 +65,7 @@ SET hive.exec.dynamic.partition.mode=nostrict;
 --Dynamic partition insert
 INSERT INTO TABLE employee_partitioned PARTITION(year, month)
 SELECT name, array('Toronto') as work_place, 
-named_struct("sex","Male","age",30) as sex_age, 
+named_struct("gender","Male","age",30) as gender_age,
 map("Python",90) as skills_score,
 map("R&D",array('Developer')) as depart_title, 
 year(start_date) as year, month(start_date) as month
@@ -163,8 +163,8 @@ SELECT reverse(split(reverse('/home/user/employee.txt'),'/')[0]) AS linux_file_n
 
 --collect set or list
 SELECT 
-collect_set(sex_age.sex) AS sex_set,
-collect_list(sex_age.sex) AS sex_list
+collect_set(gender_age.gender) AS gender_set,
+collect_list(gender_age.gender) AS gender_list
 FROM employee;
 
 --virtual columns

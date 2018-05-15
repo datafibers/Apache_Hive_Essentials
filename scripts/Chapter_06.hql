@@ -5,27 +5,27 @@
 SELECT count(*) as rowcnt1, count(1) AS rowcnt2 FROM employee;
 
 --Aggregation with GROUP BY columns
-SELECT sex_age.sex, count(*) AS row_cnt FROM employee 
-GROUP BY sex_age.sex;
+SELECT gender_age.gender, count(*) AS row_cnt FROM employee
+GROUP BY gender_age.gender;
 
 --The column age is not in the group by columns, 
 --FAILED: SemanticException [Error 10002]: Line 1:15 Invalid column reference 'age'
---SELECT sex_age.age, sex_age.sex, count(*) AS row_cnt 
---FROM employee GROUP BY sex_age.sex;
+--SELECT gender_age.age, gender_age.gender, count(*) AS row_cnt
+--FROM employee GROUP BY gender_age.gender;
 
 --Multiple aggregate functions are called in the same SELECT
-SELECT sex_age.sex, AVG(sex_age.age) AS avg_age, 
-count(*) AS row_cnt FROM employee GROUP BY sex_age.sex; 
+SELECT gender_age.gender, AVG(gender_age.age) AS avg_age,
+count(*) AS row_cnt FROM employee GROUP BY gender_age.gender;
 
 --Aggregate functions are used with CASE WHEN 
-SELECT sum(CASE WHEN sex_age.sex = 'Male' THEN sex_age.age
-ELSE 0 END)/count(CASE WHEN sex_age.sex = 'Male' THEN 1 
+SELECT sum(CASE WHEN gender_age.gender = 'Male' THEN gender_age.age
+ELSE 0 END)/count(CASE WHEN gender_age.gender = 'Male' THEN 1
 ELSE NULL END) AS male_age_avg FROM employee;
 
 --Aggregate functions are used with COALESCE and IF 
 SELECT
-sum(coalesce(sex_age.age,0)) AS age_sum,
-sum(if(sex_age.sex = 'Female',sex_age.age,0)) 
+sum(coalesce(gender_age.age,0)) AS age_sum,
+sum(if(gender_age.gender = 'Female',gender_age.age,0))
 AS female_age_sum FROM employee;
 
 --Nested aggregate functions are not allowed
@@ -44,20 +44,20 @@ SELECT sum(val1), sum(val1+val2) FROM t;
 SELECT sum(coalesce(val1,0)), sum(coalesce(val1,0)+val2) FROM t;
 
 --Aggregate functions can be also used with DISTINCT keyword to do aggregation on unique values.
-SELECT count(distinct sex_age.sex) AS sex_uni_cnt, count(distinct name) AS name_uni_cnt FROM employee;     
+SELECT count(distinct gender_age.gender) AS gender_uni_cnt, count(distinct name) AS name_uni_cnt FROM employee;
 
 --Use max/min struct
-SELECT sex_age.sex, 
-max(struct(sex_age.age, name)).col1 as age,
-max(struct(sex_age.age, name)).col2 as name
+SELECT gender_age.gender,
+max(struct(gender_age.age, name)).col1 as age,
+max(struct(gender_age.age, name)).col2 as name
 FROM employee
-GROUP BY sex_age.sex;
+GROUP BY gender_age.gender;
 
 --Trigger single reducer during the whole processing
-SELECT count(distinct sex_age.sex) AS sex_uni_cnt FROM employee;
+SELECT count(distinct gender_age.gender) AS gender_uni_cnt FROM employee;
 
 --Use subquery to select unique value before aggregations for better performance
-SELECT count(*) AS sex_uni_cnt FROM (SELECT distinct sex_age.sex FROM employee) a;
+SELECT count(*) AS gender_uni_cnt FROM (SELECT distinct gender_age.gender FROM employee) a;
 
 --Grouping Set
 SELECT 
@@ -142,14 +142,14 @@ GROUP BY name, start_date
 WITH CUBE ORDER BY name, start_date;
 
 --Aggregation condition – HAVING
-SELECT sex_age.age FROM employee GROUP BY sex_age.age HAVING count(*)=1;
-SELECT sex_age.age, count(*) as cnt FROM employee GROUP BY sex_age.age HAVING cnt=1;
+SELECT gender_age.age FROM employee GROUP BY gender_age.age HAVING count(*)=1;
+SELECT gender_age.age, count(*) as cnt FROM employee GROUP BY gender_age.age HAVING cnt=1;
 
 --If we do not use HAVING, we can use subquery as follows. 
 SELECT a.age
 FROM
-(SELECT count(*) as cnt, sex_age.age 
-FROM employee GROUP BY sex_age.age
+(SELECT count(*) as cnt, gender_age.age
+FROM employee GROUP BY gender_age.age
 ) a WHERE a.cnt<=1;
 
 --Prepare table and data for demonstration

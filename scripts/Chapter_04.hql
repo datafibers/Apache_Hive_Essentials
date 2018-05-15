@@ -43,6 +43,9 @@ SELECT name FROM employee LIMIT 2;
 --Filter with Where
 SELECT name, work_place FROM employee WHERE name = 'Michael';
 
+--Filter with Where and Limit
+SELECT name, work_place FROM employee WHERE name = 'Michael' LIMIT 1;
+
 --Filter with in
 SELECT name FROM employee WHERE sex_age.age in (27, 30);
 

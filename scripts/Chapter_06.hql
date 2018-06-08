@@ -208,6 +208,7 @@ SELECT
 name,
 dept_num as deptno,
 salary,
+cume_dist() OVER (PARTITION BY dept_num ORDER BY salary) as cume,
 lead(salary, 2) OVER (PARTITION BY dept_num ORDER BY salary) as lead,
 lag(salary, 2, 0) OVER (PARTITION BY dept_num ORDER BY salary) as lag,
 first_value(salary) OVER (PARTITION BY dept_num ORDER BY salary) as fval,
